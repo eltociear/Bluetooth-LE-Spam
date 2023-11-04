@@ -3,6 +3,7 @@ package de.simon.dankelmann.bluetoothlespam.Models
 import android.bluetooth.le.AdvertiseSettings
 import android.bluetooth.le.AdvertisingSetParameters
 import android.util.Log
+import androidx.annotation.RequiresApi
 
 class AdvertiseSettingsModel {
     private var _logTag = "AdvertiseSettingsModel"
@@ -15,6 +16,7 @@ class AdvertiseSettingsModel {
     fun validate():Boolean{
         return true
     }
+    @RequiresApi(34)
     fun build():AdvertiseSettings?{
         if(validate()){
             var settings = AdvertiseSettings.Builder()

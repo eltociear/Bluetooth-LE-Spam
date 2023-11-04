@@ -14,6 +14,7 @@ import android.bluetooth.le.AdvertiseSettings
 import android.bluetooth.le.BluetoothLeAdvertiser
 import android.content.pm.PackageManager
 import android.os.ParcelUuid
+import android.provider.SyncStateContract.Helpers
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import de.simon.dankelmann.bluetoothlespam.AppContext.AppContext
