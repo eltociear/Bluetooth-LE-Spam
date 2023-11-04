@@ -13,6 +13,9 @@ import java.util.Timer
 import java.util.TimerTask
 
 class AdvertisementLoopService (bluetoothLeAdvertisementService:BluetoothLeAdvertisementService) {
+
+    private val _useStartStopAdvertisingSet = false
+
     private var _logTag = "AdvertisementLoopService"
     var advertising = false
     private var _bluetoothLeAdvertisementService:BluetoothLeAdvertisementService = bluetoothLeAdvertisementService
@@ -98,7 +101,11 @@ class AdvertisementLoopService (bluetoothLeAdvertisementService:BluetoothLeAdver
     fun stopAllAdvertisers(){
         _advertisementSetCollections.map { collection ->
             collection.map {advertisementSet ->
-                _bluetoothLeAdvertisementService.stopAdvertisingSet(advertisementSet)
+                if(_useStartStopAdvertisingSet){
+                    _bluetoothLeAdvertisementService.stopAdvertisingSet(advertisementSet)
+                } else {
+                    _bluetoothLeAdvertisementService.stopAdvertising(advertisementSet)
+                }
             }
         }
     }
@@ -107,7 +114,11 @@ class AdvertisementLoopService (bluetoothLeAdvertisementService:BluetoothLeAdver
         if(_currentAdvertisers.count() >= _maxAdvertisers){
             // remove the first advertiser
             var advertiserToRemove = _currentAdvertisers[0]
-            _bluetoothLeAdvertisementService.stopAdvertisingSet(advertiserToRemove)
+            if(_useStartStopAdvertisingSet){
+                _bluetoothLeAdvertisementService.stopAdvertisingSet(advertiserToRemove)
+            } else {
+                _bluetoothLeAdvertisementService.stopAdvertising(advertiserToRemove)
+            }
             _currentAdvertisers.removeAt(0)
             Log.d(_logTag, "Removed advertiser for: " + advertiserToRemove.deviceName)
         }
@@ -134,8 +145,11 @@ class AdvertisementLoopService (bluetoothLeAdvertisementService:BluetoothLeAdver
             val nextAdvertisementSet = nextAdvertisementSetCollection.random()
 
             _currentAdvertisers.add(nextAdvertisementSet)
-            //_bluetoothLeAdvertisementService.startAdvertising(nextAdvertisementSet)
-            _bluetoothLeAdvertisementService.startAdvertisingSet(nextAdvertisementSet)
+            if(_useStartStopAdvertisingSet){
+                _bluetoothLeAdvertisementService.startAdvertisingSet(nextAdvertisementSet)
+            } else {
+                _bluetoothLeAdvertisementService.startAdvertising(nextAdvertisementSet)
+            }
 
             Log.d(_logTag, "Added advertiser for: " + nextAdvertisementSet.deviceName);
         }
